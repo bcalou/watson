@@ -54,6 +54,7 @@
       <input
         id="frequency"
         type="radio"
+        name="sortBy"
         bind:group={sortBy}
         value="frequency" />
       <label for="frequency" class="histograms__sortBy">Par fréquence</label>
@@ -63,6 +64,7 @@
       <input
         id="alphabetical"
         type="radio"
+        name="sortBy"
         bind:group={sortBy}
         value="alphabetical" />
       <label for="alphabetical" class="histograms__sortBy">
