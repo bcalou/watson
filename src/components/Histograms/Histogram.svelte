@@ -44,19 +44,34 @@
 </script>
 
 <style>
+  .histogram {
+    margin: 16px 16px 16px 0;
+  }
+
   .histogram__bars {
     display: flex;
     align-items: flex-end;
   }
 
   .histogram__bar {
-    width: 2ch;
-    height: calc(300px * (var(--value) / var(--highestValue)));
     background-color: aquamarine;
+    font-size: 0.8em;
+    width: 1ch;
+    height: calc(300px * (var(--value) / var(--highestValue)));
     display: flex;
     align-items: flex-end;
     justify-content: center;
     margin-right: 4px;
+  }
+
+  .histogram__caption {
+    font-weight: bold;
+  }
+
+  @media (min-width: 600px) {
+    .histogram__bar {
+      font-size: 1em;
+    }
   }
 </style>
 
@@ -67,5 +82,5 @@
     {/each}
   </div>
 
-  <figcaption>{caption}</figcaption>
+  <figcaption class="histogram__caption">{caption}</figcaption>
 </figure>

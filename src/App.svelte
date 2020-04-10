@@ -26,11 +26,19 @@
   }
 </script>
 
+<style>
+  textarea {
+    width: 100%;
+    height: 100px;
+  }
+</style>
+
 <main class="app">
+  <h1>Watson</h1>
   <h2>
     <label for="encryptedText">Texte crypté</label>
   </h2>
-  <textarea bind:value={encryptedText} id="encryptedText" cols="50" rows="10" />
+  <textarea bind:value={encryptedText} id="encryptedText" />
 
   <CoincidenceIndex {text} />
 

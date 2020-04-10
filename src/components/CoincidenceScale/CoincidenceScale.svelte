@@ -1,4 +1,9 @@
 <script>
+  import referenceIndexes from "./referenceIndexes.js";
+
+  /**
+   * @type {number}
+   */
   export let coincidenceIndex;
 
   /**
@@ -6,85 +11,97 @@
    */
   $: upperBound = Math.max(0.1, coincidenceIndex);
 
-  const indexReferences = [
-    {
-      label: "Lettres uniques",
-      value: 0
-    },
-    {
-      label: "Aléatoire",
-      value: 0.0385
-    },
-    {
-      label: "Anglais",
-      value: 0.0667
-    },
-    {
-      label: "Français",
-      value: 0.0778
+  /**
+   * @type {{label: string, value: number, encrypted: boolean}[]}
+   */
+  $: scaleIndexes = getScaleIndexes(referenceIndexes, coincidenceIndex);
+
+  /**
+   * Inject the user's coincidence index into the referenceIndexes
+   * @param {{label: string, value: number}} referenceIndexes
+   * @param {number} coincidenceIndex
+   * @returns {{label: string, value: number, encrypted: boolean}[]}
+   */
+  function getScaleIndexes(referenceIndexes, coincidenceIndex) {
+    if (coincidenceIndex === null) {
+      return referenceIndexes;
+    } else {
+      return [
+        ...referenceIndexes,
+        { label: "Texte&nbsp;crypté", value: coincidenceIndex, encrypted: true }
+      ].sort((a, b) => a.value - b.value);
     }
-  ];
+  }
 </script>
 
 <style>
-  .coincidenceScale {
-    padding: 56px 96px 56px 0;
-    position: relative;
-  }
-
   .coincidenceScale__inner {
-    position: relative;
-  }
-
-  .coincidenceScale__inner::before {
-    content: "";
-    display: block;
-    width: 100%;
-    height: 2px;
-    background: grey;
+    display: flex;
+    flex-direction: column;
   }
 
   .coincidenceScale__point {
-    position: absolute;
-    left: calc(var(--value) * (100% / var(--upperBound)));
+    order: calc(var(--value));
   }
 
-  .coincidenceScale__point--encryptedText {
+  .coincidenceScale__point--encrypted {
     color: red;
   }
 
-  .coincidenceScale__point--encryptedText {
-    transform: translateY(-100%);
-  }
+  @media (min-width: 600px) {
+    .coincidenceScale {
+      padding: 56px 96px 56px 0;
+      position: relative;
+    }
 
-  .coincidenceScale__point--reference::before,
-  .coincidenceScale__point--encryptedText::after {
-    content: "";
-    display: block;
-    width: 2px;
-    height: 15px;
-    background-color: red;
+    .coincidenceScale__inner {
+      position: relative;
+    }
+
+    .coincidenceScale__inner::before {
+      content: "";
+      display: block;
+      width: 100%;
+      height: 2px;
+      background: grey;
+    }
+
+    .coincidenceScale__point {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    .coincidenceScale__point {
+      position: absolute;
+      left: calc(var(--value) * (100% / var(--upperBound)));
+    }
+
+    .coincidenceScale__point--encrypted {
+      transform: translateY(-100%);
+    }
+
+    .coincidenceScale__point--reference::after,
+    .coincidenceScale__point--encrypted::before {
+      content: "";
+      display: block;
+      width: 2px;
+      height: 15px;
+      background-color: red;
+    }
   }
 </style>
 
 <div class="coincidenceScale" style="--upperBound: {upperBound}">
   <div class="coincidenceScale__inner">
-    {#each indexReferences as indexReference}
+    {#each scaleIndexes as scaleIndex}
       <div
-        class="coincidenceScale__point coincidenceScale__point--reference"
-        style="--value: {indexReference.value}">
-        <div class="coincidenceScale__label">{indexReference.label}</div>
-        <div class="coincidenceScale__value">{indexReference.value}</div>
+        class="coincidenceScale__point {scaleIndex.encrypted ? 'coincidenceScale__point--encrypted' : 'coincidenceScale__point--reference'}"
+        style="--value: {scaleIndex.value}">
+        <span class="coincidenceScale__value">{scaleIndex.value}</span>
+        <span class="coincidenceScale__label">
+          {@html scaleIndex.label}
+        </span>
       </div>
     {/each}
-
-    {#if coincidenceIndex !== null}
-      <div
-        class="coincidenceScale__point coincidenceScale__point--encryptedText"
-        style="--value: {coincidenceIndex}">
-        <div class="coincidenceScale__label">Texte&nbsp;crypté</div>
-        <div class="coincidenceScale__value">{coincidenceIndex}</div>
-      </div>
-    {/if}
   </div>
 </div>

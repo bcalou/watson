@@ -37,7 +37,7 @@
   .histograms__list {
     display: flex;
     align-items: flex-end;
-    flex-wrap: wrap;
+    flex-wrap: wrap-reverse;
   }
 
   .histograms__sortBy {
@@ -50,27 +50,37 @@
   <h2>Réparition des lettres</h2>
 
   <form>
-    <input id="frequency" type="radio" bind:group={sortBy} value="frequency" />
-    <label for="frequency" class="histograms__sortBy">Par fréquence</label>
+    <div class="histograms__sortBy">
+      <input
+        id="frequency"
+        type="radio"
+        bind:group={sortBy}
+        value="frequency" />
+      <label for="frequency" class="histograms__sortBy">Par fréquence</label>
+    </div>
 
-    <input
-      id="alphabetical"
-      type="radio"
-      bind:group={sortBy}
-      value="alphabetical" />
-    <label for="alphabetical" class="histograms__sortBy">
-      Par ordre alphabétique
-    </label>
+    <div class="histograms__sortBy">
+      <input
+        id="alphabetical"
+        type="radio"
+        bind:group={sortBy}
+        value="alphabetical" />
+      <label for="alphabetical" class="histograms__sortBy">
+        Par ordre alphabétique
+      </label>
+    </div>
   </form>
 
   <div class="histograms__list">
     <Histogram
-      caption="Répartition des lettres dans le texte crypté"
-      data={textFrequencies}
-      {sortBy} />
-    <Histogram
       caption="Répartition des lettres en français"
       data={lettersFrequencies}
       {sortBy} />
+    {#if text}
+      <Histogram
+        caption="Répartition des lettres dans le texte crypté"
+        data={textFrequencies}
+        {sortBy} />
+    {/if}
   </div>
 </section>
